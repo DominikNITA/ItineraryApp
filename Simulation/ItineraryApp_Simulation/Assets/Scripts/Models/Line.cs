@@ -4,11 +4,14 @@ using UnityEngine;
 using Itinerary;
 using System.Linq;
 
+[RequireComponent(typeof(LineRenderer))]
 public class Line : MonoBehaviour
 {
     public int Number;
-    public List<Station> Stations;
-    public Color Color;
+    public List<Station> Stations = new List<Station>();
+    public Color Color = Color.red;
+
+    public LineRenderer LineRenderer;
 
     public LineProto ToLineProto(bool includeStationObjects = false)
     {

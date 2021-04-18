@@ -22,7 +22,7 @@ public class StationNamesProvider : MonoBehaviour
     }
 
     [ContextMenu("Generate random station names")]
-    async Task<List<string>> GetRandomNames()
+    public async Task<List<string>> GetRandomNames()
     {
         var stationNames = _stationNamesClient.GetRandomStationNames(Count, RegionCode);
         foreach (var stationName in stationNames)

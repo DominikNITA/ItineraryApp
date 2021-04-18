@@ -9,6 +9,8 @@ public class Station : MonoBehaviour
     public int Id;
     public string Name;
     public List<Line> Lines;
+    public Vector2Int MapPosition;
+
 
     public StationProto ToStationProto(bool includeLineObjects = false)
     {
