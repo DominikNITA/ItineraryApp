@@ -3,40 +3,6 @@
 'use strict';
 var grpc = require('grpc');
 var users_pb = require('./users_pb.js');
-var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js');
-
-function serialize_google_protobuf_Empty(arg) {
-  if (!(arg instanceof google_protobuf_empty_pb.Empty)) {
-    throw new Error('Expected argument of type google.protobuf.Empty');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_google_protobuf_Empty(buffer_arg) {
-  return google_protobuf_empty_pb.Empty.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_users_RandomStationNamesRequest(arg) {
-  if (!(arg instanceof users_pb.RandomStationNamesRequest)) {
-    throw new Error('Expected argument of type users.RandomStationNamesRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_users_RandomStationNamesRequest(buffer_arg) {
-  return users_pb.RandomStationNamesRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_users_StationNames(arg) {
-  if (!(arg instanceof users_pb.StationNames)) {
-    throw new Error('Expected argument of type users.StationNames');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_users_StationNames(buffer_arg) {
-  return users_pb.StationNames.deserializeBinary(new Uint8Array(buffer_arg));
-}
 
 function serialize_users_User(arg) {
   if (!(arg instanceof users_pb.User)) {
@@ -73,43 +39,6 @@ var UsersService = exports.UsersService = {
     responseSerialize: serialize_users_User,
     responseDeserialize: deserialize_users_User,
   },
-  createUser: {
-    path: '/users.Users/CreateUser',
-    requestStream: true,
-    responseStream: false,
-    requestType: users_pb.User,
-    responseType: google_protobuf_empty_pb.Empty,
-    requestSerialize: serialize_users_User,
-    requestDeserialize: deserialize_users_User,
-    responseSerialize: serialize_google_protobuf_Empty,
-    responseDeserialize: deserialize_google_protobuf_Empty,
-  },
-  getUsers: {
-    path: '/users.Users/GetUsers',
-    requestStream: false,
-    responseStream: true,
-    requestType: google_protobuf_empty_pb.Empty,
-    responseType: users_pb.User,
-    requestSerialize: serialize_google_protobuf_Empty,
-    requestDeserialize: deserialize_google_protobuf_Empty,
-    responseSerialize: serialize_users_User,
-    responseDeserialize: deserialize_users_User,
-  },
 };
 
 exports.UsersClient = grpc.makeGenericClientConstructor(UsersService);
-var RandomStationNamesService = exports.RandomStationNamesService = {
-  getRandomStationNames: {
-    path: '/users.RandomStationNames/GetRandomStationNames',
-    requestStream: false,
-    responseStream: false,
-    requestType: users_pb.RandomStationNamesRequest,
-    responseType: users_pb.StationNames,
-    requestSerialize: serialize_users_RandomStationNamesRequest,
-    requestDeserialize: deserialize_users_RandomStationNamesRequest,
-    responseSerialize: serialize_users_StationNames,
-    responseDeserialize: deserialize_users_StationNames,
-  },
-};
-
-exports.RandomStationNamesClient = grpc.makeGenericClientConstructor(RandomStationNamesService);

@@ -8,19 +8,19 @@ import {
     handleServerStreamingCall,
     handleUnaryCall,
 } from "grpc";
-import { IRandomStationNamesServer } from "../proto/users_grpc_pb";
-import { RandomStationNamesRequest, StationNames } from "../proto/users_pb";
+import { IStationNamesGeneratorServer } from "../proto/itinerary_grpc_pb";
+import { RandomStationNamesRequest, StationNamesResponse } from "../proto/itinerary_pb";
 
 import axios from "axios";
 
 function stationNamesToClass(namesArray: Array<string>) {
-    const stationNames = new StationNames();
-    namesArray.forEach(name => stationNames.addName(name));
+    const stationNames = new StationNamesResponse();
+    namesArray.forEach(name => stationNames.addStationNames(name));
     return stationNames;
 }
 
-export class RandomStationNamesServer implements IRandomStationNamesServer {
-    async getRandomStationNames(call: ServerUnaryCall<RandomStationNamesRequest>, callback: sendUnaryData<StationNames>) {
+export class RandomStationNamesServer implements IStationNamesGeneratorServer {
+    async getRandomStationNames(call: ServerUnaryCall<RandomStationNamesRequest>, callback: sendUnaryData<StationNamesResponse>) {
         const region = call.request.getRegion();
         const count = call.request.getCount();
         //TODO: Add variable validation

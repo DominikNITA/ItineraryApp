@@ -5,7 +5,6 @@
 /* eslint-disable */
 
 import * as jspb from "google-protobuf";
-import * as google_protobuf_empty_pb from "google-protobuf/google/protobuf/empty_pb";
 
 export class User extends jspb.Message { 
     getId(): number;
@@ -53,51 +52,6 @@ export class UserRequest extends jspb.Message {
 export namespace UserRequest {
     export type AsObject = {
         id: number,
-    }
-}
-
-export class RandomStationNamesRequest extends jspb.Message { 
-    getCount(): number;
-    setCount(value: number): RandomStationNamesRequest;
-    getRegion(): string;
-    setRegion(value: string): RandomStationNamesRequest;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): RandomStationNamesRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: RandomStationNamesRequest): RandomStationNamesRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: RandomStationNamesRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): RandomStationNamesRequest;
-    static deserializeBinaryFromReader(message: RandomStationNamesRequest, reader: jspb.BinaryReader): RandomStationNamesRequest;
-}
-
-export namespace RandomStationNamesRequest {
-    export type AsObject = {
-        count: number,
-        region: string,
-    }
-}
-
-export class StationNames extends jspb.Message { 
-    clearNameList(): void;
-    getNameList(): Array<string>;
-    setNameList(value: Array<string>): StationNames;
-    addName(value: string, index?: number): string;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): StationNames.AsObject;
-    static toObject(includeInstance: boolean, msg: StationNames): StationNames.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: StationNames, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): StationNames;
-    static deserializeBinaryFromReader(message: StationNames, reader: jspb.BinaryReader): StationNames;
-}
-
-export namespace StationNames {
-    export type AsObject = {
-        nameList: Array<string>,
     }
 }
 

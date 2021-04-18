@@ -14,6 +14,12 @@ public class NetworkGenerator : MonoBehaviour
 
     public StationNamesProvider StationNamesProvider;
 
+    public List<Station> Stations;
+    public List<Line> Lines;
+
+    public GameObject StationPrefab;
+    public GameObject LinePrefab;
+
     [ContextMenu("Generate new network")]
     void GenerateNewNetwork()
     {

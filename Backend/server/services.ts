@@ -10,8 +10,8 @@ import {
 } from "grpc";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 
-import { IUsersServer, IRandomStationNamesServer } from "../proto/users_grpc_pb";
-import { RandomStationNamesRequest, StationNames, User, UserRequest } from "../proto/users_pb";
+import { IUsersServer } from "../proto/users_grpc_pb";
+import { User, UserRequest } from "../proto/users_pb";
 import { users } from "./db";
 
 
@@ -34,30 +34,30 @@ export class UsersServer implements IUsersServer {
         callback(null, user);
     }
 
-    getUsers(call: ServerWritableStream<Empty>) {
-        console.log(`getUsers: streaming all users.`);
-        for (const user of users) call.write(user);
-        call.end();
-    }
+    // getUsers(call: ServerWritableStream<Empty>) {
+    //     console.log(`getUsers: streaming all users.`);
+    //     for (const user of users) call.write(user);
+    //     call.end();
+    // }
 
-    createUser(
-        call: ServerReadableStream<Empty>,
-        callback: sendUnaryData<Empty>
-    ) {
-        console.log(`createUsers: creating new users from stream.`);
+    // createUser(
+    //     call: ServerReadableStream<Empty>,
+    //     callback: sendUnaryData<Empty>
+    // ) {
+    //     console.log(`createUsers: creating new users from stream.`);
 
-        let userCount = 0;
+    //     let userCount = 0;
 
-        call.on("data", (u) => {
-            userCount++;
-            users.push(u);
-        });
+    //     call.on("data", (u) => {
+    //         userCount++;
+    //         users.push(u);
+    //     });
 
-        call.on("end", () => {
-            console.log(`Created ${userCount} new user(s).`);
-            callback(null, new Empty());
-        });
-    }
-    
+    //     call.on("end", () => {
+    //         console.log(`Created ${userCount} new user(s).`);
+    //         callback(null, new Empty());
+    //     });
+    // }
+
 
 }

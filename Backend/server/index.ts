@@ -1,11 +1,12 @@
 import { Server, ServerCredentials } from "grpc";
-import { UsersService, RandomStationNamesService } from "../proto/users_grpc_pb";
+import { UsersService } from "../proto/users_grpc_pb";
+import { StationNamesGeneratorService } from "../proto/itinerary_grpc_pb";
 import { UsersServer } from "./services";
-import { RandomStationNamesServer } from "./RandomStationNameService"
+import { RandomStationNamesServer } from "./RandomStationNameService";
 
 const server = new Server();
 server.addService(UsersService, new UsersServer());
-server.addService(RandomStationNamesService, new RandomStationNamesServer());
+server.addService(StationNamesGeneratorService, new RandomStationNamesServer());
 
 
 const port = 3000;

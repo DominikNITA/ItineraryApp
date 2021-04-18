@@ -23,16 +23,3 @@ message UserRequest {
 service Users {
     rpc GetUser(UserRequest) returns (User) {};
 }
-
-message RandomStationNamesRequest{
-    int32 count = 1;
-    string region = 2;
-}
-
-message StationNames {
-    repeated string name = 1;
-}
-
-service RandomStationNames{
-    rpc GetRandomStationNames(RandomStationNamesRequest) returns (StationNames);
-}

@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package itinerary;
+
+message RandomStationNamesRequest{
+    int32 count = 1;
+    string region = 2;
+}
+
+message StationNamesResponse {
+    repeated string station_names = 1;
+}
+
+message LineProto {
+	int32 id = 1;
+	int32 number = 2;
+	oneof lines{
+		StationProtos station_objects = 3;
+		IdProtos station_ids =4;
+	}
+}
+
+message LineProtos {
+	repeated LineProto lines = 1;
+}
+
+message StationProtos {
+	repeated StationProto stations = 1;
+}
+
+message StationProto {
+	int32 id = 1;
+	string name = 2;
+	oneof lines{
+		LineProtos line_objects = 3;
+		IdProtos line_ids = 4;
+	}
+}
+
+message IdProtos{
+	repeated int32 ids = 1;
+}
+
+service StationNamesGenerator{
+    rpc GetRandomStationNames(RandomStationNamesRequest) returns (StationNamesResponse);
+}
