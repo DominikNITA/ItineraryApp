@@ -23,6 +23,9 @@ public class NetworkGenerator : MonoBehaviour
     public Station StationPrefab;
     public Line LinePrefab;
 
+    public GameObject LinesHandler;
+    public GameObject StationsHandler;
+
     void ResetStationsAndLines()
     {
         Stations.ForEach(station => Destroy(station.gameObject));
@@ -44,44 +47,42 @@ public class NetworkGenerator : MonoBehaviour
 
     private IEnumerator GenerateNewNetworkCoroutine()
     {
+        StationNamesProvider.Count = TargetStationsCount;
         var stationNames = StationNamesProvider.GetRandomNames().Result;
+
+        var minimalLineLength = (AverageDistance + DistanceSpread / 2) * (MinStationsPerLine - 1);
+
         while (TargetStationsCount - Stations.Count >= MinStationsPerLine)
         {
             var startPosition = GenerateRandomPoint();
             var endPosition = GenerateRandomPoint();
-            if (Vector2Int.Distance(startPosition, endPosition) < AverageDistance * (MinStationsPerLine - 1))
+            if (Vector2Int.Distance(startPosition, endPosition) < minimalLineLength)
             {
                 continue;
             }
 
-            var newLine = Instantiate(LinePrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            newLine.Number = Lines.Count;
-            newLine.Color = GetDistinguishableColor(newLine.Number);
+            var newLine = CreateLine();
 
             //Create starting station
-            newLine.Stations.Add(CreateStation(startPosition, stationNames[Stations.Count], newLine));
+            CreateStation(startPosition, stationNames[Stations.Count], newLine);
 
-            var lastStationPosition = startPosition;
-            while (TargetStationsCount - Stations.Count > 0 
-                && Vector2Int.Distance(lastStationPosition,endPosition) > AverageDistance)
+            var previousStationPosition = startPosition;
+            while (TargetStationsCount - Stations.Count > 0
+                && Vector2Int.Distance(previousStationPosition, endPosition) > AverageDistance)
             {
-                var dx = endPosition.x - lastStationPosition.x;
-                var dy = endPosition.y - lastStationPosition.y;
-                var h = Vector2Int.Distance(lastStationPosition, endPosition);
-                var d = AverageDistance - DistanceSpread / 2 + Random.value * DistanceSpread;
-
-                var stationPosition = new Vector2Int(
-                    Mathf.RoundToInt(lastStationPosition.x + (d * dx) / h),
-                    Mathf.RoundToInt(lastStationPosition.y + (d * dy) / h)
-                    );
+                var stationPosition = GetNextStationPosition(endPosition, previousStationPosition);
 
                 var station = CreateStation(stationPosition, stationNames[Stations.Count], newLine);
-                lastStationPosition = station.MapPosition;
+                previousStationPosition = station.MapPosition;
 
-                yield return new WaitForSeconds(0.2f);
+                Debug.Log("Just before entering renderer update");
+                newLine.UpdateLineRenderer();
+
+                yield return new WaitForSeconds(0.45f);
             }
 
             Lines.Add(newLine);
+            yield return new WaitForSeconds(1f);
         }
     }
     private Vector2Int GenerateRandomPoint()
@@ -92,6 +93,20 @@ public class NetworkGenerator : MonoBehaviour
             );
     }
 
+    private Vector2Int GetNextStationPosition(Vector2Int endPosition, Vector2Int previousStationPosition)
+    {
+        //Thales
+        var dx = endPosition.x - previousStationPosition.x;
+        var dy = endPosition.y - previousStationPosition.y;
+        var h = Vector2Int.Distance(previousStationPosition, endPosition);
+        var d = AverageDistance - DistanceSpread / 2 + Random.value * DistanceSpread;
+
+        return new Vector2Int(
+            Mathf.RoundToInt(previousStationPosition.x + (d * dx) / h),
+            Mathf.RoundToInt(previousStationPosition.y + (d * dy) / h)
+            );
+    }
+
     private Color GetDistinguishableColor(int n)
     {
         //Use golden ratio to generate hue in range [0f,1f]
@@ -99,20 +114,34 @@ public class NetworkGenerator : MonoBehaviour
         return Color.HSVToRGB(hue, 0.63f, 0.61f);
     }
 
-    private Station CreateStation(Vector2Int position, string stationName, Line line)
+    private Station CreateStation(Vector2Int mapPosition, string stationName, Line line)
     {
-        var closestStation = Stations.OrderBy(station => Vector2Int.Distance(station.MapPosition, position)).First();
-        if (Vector2Int.Distance(closestStation.MapPosition, position) < MergeDistance)
+        var closestStation = Stations.OrderBy(station => Vector2Int.Distance(station.MapPosition, mapPosition)).FirstOrDefault();
+        if (closestStation && Vector2Int.Distance(closestStation.MapPosition, mapPosition) < MergeDistance)
         {
             closestStation.Lines.Add(line);
+            line.Stations.Add(closestStation);
             return closestStation;
         }
 
-        var newStation = Instantiate(StationPrefab);
+        var newStation = Instantiate(StationPrefab, new Vector3(mapPosition.x / 250f, mapPosition.y / 250f, 0), Quaternion.identity, StationsHandler.transform);
         newStation.Name = stationName;
         newStation.Lines.Add(line);
-        newStation.MapPosition = position;
+        newStation.MapPosition = mapPosition;
+        newStation.gameObject.name = $"Station {stationName}";
+
         Stations.Add(newStation);
+        line.Stations.Add(newStation);
+
         return newStation;
+    }
+
+    private Line CreateLine()
+    {
+        var newLine = Instantiate(LinePrefab, new Vector3(0, 0, 0), Quaternion.identity, LinesHandler.transform);
+        newLine.Number = Lines.Count + 1;
+        newLine.Color = GetDistinguishableColor(newLine.Number);
+        newLine.gameObject.name = $"Line {newLine.Number}";
+        return newLine;
     }
 }

@@ -9,9 +9,33 @@ public class Line : MonoBehaviour
 {
     public int Number;
     public List<Station> Stations = new List<Station>();
-    public Color Color = Color.red;
+
+    [SerializeField] private Color _color;
+    public Color Color
+    {
+        get
+        {
+            return _color;
+        }
+        set
+        {
+            _color = value;
+
+            LineRenderer.material.color = Color;
+            //LineRenderer.endColor = Color;
+
+            UpdateLineRenderer();
+        }
+    }
 
     public LineRenderer LineRenderer;
+
+    public void UpdateLineRenderer()
+    {
+        LineRenderer.positionCount = Stations.Count;
+        Debug.Log($"New position count = {LineRenderer.positionCount} for Line {Number}");
+        LineRenderer.SetPositions(Stations.Select(station => station.transform.position).ToArray());
+    }
 
     public LineProto ToLineProto(bool includeStationObjects = false)
     {
