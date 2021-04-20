@@ -26,23 +26,25 @@ public class NetworkGenerator : MonoBehaviour
     public GameObject LinesHandler;
     public GameObject StationsHandler;
 
-    void ResetStationsAndLines()
-    {
-        Stations.ForEach(station => Destroy(station.gameObject));
-        Lines.ForEach(line => Destroy(line.gameObject));
 
-        Stations = new List<Station>();
-        Lines = new List<Line>();
-    }
 
     [ContextMenu("Generate new network")]
-    void GenerateNewNetwork()
+    public void GenerateNewNetwork()
     {
         StopAllCoroutines();
 
         ResetStationsAndLines();
 
         StartCoroutine("GenerateNewNetworkCoroutine");
+    }
+
+    public void ResetStationsAndLines()
+    {
+        Stations.ForEach(station => Destroy(station.gameObject));
+        Lines.ForEach(line => Destroy(line.gameObject));
+
+        Stations = new List<Station>();
+        Lines = new List<Line>();
     }
 
     private IEnumerator GenerateNewNetworkCoroutine()

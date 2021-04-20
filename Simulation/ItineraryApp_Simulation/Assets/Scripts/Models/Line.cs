@@ -22,7 +22,6 @@ public class Line : MonoBehaviour
             _color = value;
 
             LineRenderer.material.color = Color;
-            //LineRenderer.endColor = Color;
 
             UpdateLineRenderer();
         }
